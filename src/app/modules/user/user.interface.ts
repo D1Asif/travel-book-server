@@ -1,6 +1,6 @@
-import { Model, Types } from "mongoose";
+import { Document, Model, Types } from "mongoose";
 
-export type TUser = {
+export interface TUser extends Document {
     name: string,
     username: string,
     email: string,
