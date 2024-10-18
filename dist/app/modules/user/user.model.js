@@ -1,4 +1,23 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -40,49 +59,67 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
-var mongoose_1 = require("mongoose");
-var bcrypt_1 = __importDefault(require("bcrypt"));
+var mongoose_1 = __importStar(require("mongoose"));
 var config_1 = __importDefault(require("../../config"));
+var bcrypt_1 = __importDefault(require("bcrypt"));
 var userSchema = new mongoose_1.Schema({
     name: {
         type: String,
+        required: true
+    },
+    username: {
+        type: String,
         required: true,
+        unique: true
     },
     email: {
         type: String,
         required: true,
-        unique: true,
-    },
-    password: {
-        type: String,
-        required: true,
-        select: 0
+        unique: true
     },
     phone: {
         type: String,
-        required: true,
+        required: true
+    },
+    password: {
+        type: String,
+        required: true
+    },
+    profilePicture: {
+        type: String,
+        default: ''
+    },
+    isVerifiedUser: {
+        type: Boolean,
+        default: false
     },
     role: {
         type: String,
-        enum: ['admin', 'user'],
-        default: 'user',
-        required: true,
+        enum: ['user', 'admin'],
+        default: 'user'
     },
-    address: {
-        type: String,
-        required: true,
-    },
-    isDeleted: {
-        type: Boolean,
-        default: false,
-    }
+    posts: [{
+            type: mongoose_1.default.Schema.Types.ObjectId,
+            ref: 'Post',
+            default: []
+        }],
+    following: [{
+            type: mongoose_1.default.Schema.Types.ObjectId,
+            ref: 'User',
+            default: []
+        }],
+    followers: [{
+            type: mongoose_1.default.Schema.Types.ObjectId,
+            ref: 'User',
+            default: []
+        }]
 }, {
     timestamps: true
 });
 userSchema.statics.isUserExistByEmail = function (email) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, exports.User.findOne({ email: email }).select("+password").lean()];
+            case 0: return [4 /*yield*/, exports.User.findOne({ email: email }).select("+password")];
             case 1: return [2 /*return*/, _a.sent()];
         }
     });

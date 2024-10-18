@@ -16,6 +16,8 @@ const commentSchema = new Schema<TComment>({
         type: String,
         required: true
     },
+}, {
+    timestamps: true
 });
 
 export const Comment = model<TComment>('Comment', commentSchema);

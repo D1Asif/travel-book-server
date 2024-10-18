@@ -69,9 +69,6 @@ var auth = function () {
                     if (!user) {
                         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Authentication failure: user not found");
                     }
-                    if (user.isDeleted) {
-                        throw new AppError_1.default(http_status_1.default.FORBIDDEN, "Authentication failure: user is deleted");
-                    }
                     if (requiredRoles.length && !requiredRoles.includes(user.role)) {
                         throw new AppError_1.default(http_status_1.default.UNAUTHORIZED, "You have no access to this route!");
                     }

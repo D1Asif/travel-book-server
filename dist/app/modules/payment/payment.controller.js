@@ -41,19 +41,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PaymentControllers = void 0;
 var catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
-var payment_service_1 = require("./payment.service");
-var confirmPayment = (0, catchAsync_1.default)(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var result;
+var makePayment = (0, catchAsync_1.default)(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, payment_service_1.PaymentServices.confirmPaymentIntoDB(req.query)];
-            case 1:
-                result = _a.sent();
-                res.send(result);
-                return [2 /*return*/];
-        }
+        return [2 /*return*/];
     });
 }); });
 exports.PaymentControllers = {
-    confirmPayment: confirmPayment
+    makePayment: makePayment
 };

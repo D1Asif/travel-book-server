@@ -35,31 +35,19 @@ var QueryBuilder = /** @class */ (function () {
         return this;
     };
     QueryBuilder.prototype.filter = function () {
-        var _a, _b, _c, _d;
-        // creating a query object so that direct value filters can be done with that. The fields that needs to be handled separately needs to be deleted from the query object and handle separately e.g. tags, minPrice, maxPrice.
+        var _a, _b;
+        // creating a query object so that direct value filters can be done with that. The fields that needs to be handled separately needs to be deleted from the query object and handle separately e.g. tags.
         var queryObj = __assign({}, this.query);
-        if (queryObj === null || queryObj === void 0 ? void 0 : queryObj.serviceId) {
-            queryObj.service = queryObj.serviceId;
-            delete queryObj.serviceId;
-        }
-        if (queryObj.sort) {
+        if (queryObj === null || queryObj === void 0 ? void 0 : queryObj.sort) {
             delete queryObj.sort;
         }
-        if (queryObj.searchTerm) {
+        if (queryObj === null || queryObj === void 0 ? void 0 : queryObj.searchTerm) {
             delete queryObj.searchTerm;
         }
         var tags = (_b = (_a = this.query) === null || _a === void 0 ? void 0 : _a.tags) === null || _b === void 0 ? void 0 : _b.split(",");
         if (tags === null || tags === void 0 ? void 0 : tags.length) {
             delete queryObj.tags;
             this.modelQuery = this.modelQuery.find({ tags: { $all: tags } });
-        }
-        if ((_c = this.query) === null || _c === void 0 ? void 0 : _c.minPrice) {
-            delete queryObj.minPrice;
-            this.modelQuery = this.modelQuery.find({ price: { $gte: this.query.minPrice } });
-        }
-        if ((_d = this.query) === null || _d === void 0 ? void 0 : _d.maxPrice) {
-            delete queryObj.maxPrice;
-            this.modelQuery = this.modelQuery.find({ price: { $lte: this.query.maxPrice } });
         }
         this.modelQuery = this.modelQuery.find(queryObj);
         return this;

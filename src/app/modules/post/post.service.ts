@@ -4,6 +4,7 @@ import { Post } from "./post.model";
 import { User } from "../user/user.model";
 import AppError from "../../errors/AppError";
 import httpStatus from "http-status";
+import QueryBuilder from "../../builder/QueryBuilder";
 
 const createPostIntoDB = async (payload: TPost, author: string) => {
     const session = await mongoose.startSession();
@@ -41,6 +42,32 @@ const createPostIntoDB = async (payload: TPost, author: string) => {
     }
 }
 
+const getAllPostsFromDB = async (query: Record<string, unknown>) => {
+    const postsQuery = new QueryBuilder(
+        Post.find(),
+        query
+    ).search(['content'])
+        .filter()
+        .sort()
+
+    const posts = await postsQuery.modelQuery
+                    .populate({
+                        path: 'author',
+                        select: '_id name username profilePicture isVerifiedUser'
+                    })
+                    .populate({
+                        path: 'comments',
+                        select: '_id author content',
+                        populate: {
+                            path: 'author',
+                            select: '_id name username profilePicture isVerifiedUser'
+                        }
+                    });
+
+    return posts;
+}
+
 export const PostServices = {
-    createPostIntoDB
+    createPostIntoDB,
+    getAllPostsFromDB
 }

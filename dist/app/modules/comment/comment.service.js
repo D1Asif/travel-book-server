@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -35,20 +46,60 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserServices = void 0;
-var user_model_1 = require("./user.model");
-var createUserIntoDB = function (payload) { return __awaiter(void 0, void 0, void 0, function () {
-    var newUser;
+exports.CommentServices = void 0;
+var mongoose_1 = __importDefault(require("mongoose"));
+var comment_model_1 = require("./comment.model");
+var post_model_1 = require("../post/post.model");
+var AppError_1 = __importDefault(require("../../errors/AppError"));
+var http_status_1 = __importDefault(require("http-status"));
+var createCommentIntoDB = function (payload, author) { return __awaiter(void 0, void 0, void 0, function () {
+    var commentData, session, newComment, updatedPost, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, user_model_1.User.create(payload)];
+            case 0:
+                commentData = __assign(__assign({}, payload), { author: author });
+                return [4 /*yield*/, mongoose_1.default.startSession()];
             case 1:
-                newUser = _a.sent();
-                return [2 /*return*/, newUser];
+                session = _a.sent();
+                _a.label = 2;
+            case 2:
+                _a.trys.push([2, 7, , 10]);
+                session.startTransaction();
+                return [4 /*yield*/, comment_model_1.Comment.create([commentData], { session: session })];
+            case 3:
+                newComment = _a.sent();
+                return [4 /*yield*/, post_model_1.Post.findByIdAndUpdate(payload.postId, {
+                        $push: { comments: newComment[0]._id }
+                    }, { session: session })];
+            case 4:
+                updatedPost = _a.sent();
+                if (!updatedPost) {
+                    throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Post not fund!");
+                }
+                return [4 /*yield*/, session.commitTransaction()];
+            case 5:
+                _a.sent();
+                return [4 /*yield*/, session.endSession()];
+            case 6:
+                _a.sent();
+                return [2 /*return*/, newComment];
+            case 7:
+                err_1 = _a.sent();
+                return [4 /*yield*/, session.abortTransaction()];
+            case 8:
+                _a.sent();
+                return [4 /*yield*/, session.endSession()];
+            case 9:
+                _a.sent();
+                throw err_1;
+            case 10: return [2 /*return*/];
         }
     });
 }); };
-exports.UserServices = {
-    createUserIntoDB: createUserIntoDB
+exports.CommentServices = {
+    createCommentIntoDB: createCommentIntoDB
 };

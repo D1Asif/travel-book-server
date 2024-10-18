@@ -35,20 +35,32 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserServices = void 0;
-var user_model_1 = require("./user.model");
-var createUserIntoDB = function (payload) { return __awaiter(void 0, void 0, void 0, function () {
-    var newUser;
+exports.CommentControllers = void 0;
+var http_status_1 = __importDefault(require("http-status"));
+var catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
+var sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
+var comment_service_1 = require("./comment.service");
+var createComment = (0, catchAsync_1.default)(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var result;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, user_model_1.User.create(payload)];
+            case 0: return [4 /*yield*/, comment_service_1.CommentServices.createCommentIntoDB(req.body, req.user.id)];
             case 1:
-                newUser = _a.sent();
-                return [2 /*return*/, newUser];
+                result = _a.sent();
+                (0, sendResponse_1.default)(res, {
+                    statusCode: http_status_1.default.OK,
+                    success: true,
+                    message: "Comment successfully created",
+                    data: result
+                });
+                return [2 /*return*/];
         }
     });
-}); };
-exports.UserServices = {
-    createUserIntoDB: createUserIntoDB
+}); });
+exports.CommentControllers = {
+    createComment: createComment
 };

@@ -42,20 +42,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthControllers = void 0;
 var http_status_1 = __importDefault(require("http-status"));
 var catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
+var sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
 var auth_service_1 = require("./auth.service");
 var loginUser = (0, catchAsync_1.default)(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var result, token, user;
+    var result;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, auth_service_1.AuthServices.loginUser(req.body)];
             case 1:
                 result = _a.sent();
-                token = result.token, user = result.user;
-                res.status(http_status_1.default.OK).json({
+                (0, sendResponse_1.default)(res, {
+                    statusCode: http_status_1.default.OK,
                     success: true,
-                    message: "User logged in successfully",
-                    token: token,
-                    data: user
+                    message: "User successfully logged in",
+                    data: result
                 });
                 return [2 /*return*/];
         }

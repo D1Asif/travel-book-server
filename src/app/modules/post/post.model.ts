@@ -15,6 +15,10 @@ const postSchema = new Schema<TPost>({
         type: [String],
         default: []
     },
+    tags: {
+        type: [String],
+        default: []
+    },
     isPremium: {
         type: Boolean,
         default: false
@@ -34,6 +38,8 @@ const postSchema = new Schema<TPost>({
         ref: 'Comment',
         default: []
     }]
+}, {
+    timestamps: true
 });
 
 export const Post = model<TPost>('Post', postSchema);

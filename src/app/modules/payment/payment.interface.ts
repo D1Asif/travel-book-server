@@ -1,7 +1,7 @@
 import { Types } from "mongoose"
 
 export type TPayment = {
-    userId: Types.ObjectId,
+    user: Types.ObjectId,
     amount: number,
     paymentStatus: 'pending' | 'paid' | 'canceled'
 }

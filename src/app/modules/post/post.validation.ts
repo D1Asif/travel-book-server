@@ -4,7 +4,8 @@ const createPostValidationSchema = z.object({
     body: z.object({
         content: z.string().min(1, { message: "Content is required" }),
         images: z.array(z.string().url()).default([]),
-        isPremium: z.boolean(),
+        tags: z.array(z.string()).default([]),
+        isPremium: z.boolean()
     })
 })
 

@@ -6,6 +6,8 @@ import { PostControllers } from "./post.controller";
 
 const router = express.Router();
 
-router.post("/", auth('user', 'admin'), validateRequest(PostValidations.createPostValidationSchema), PostControllers.createPost)
+router.post("/", auth('user', 'admin'), validateRequest(PostValidations.createPostValidationSchema), PostControllers.createPost);
+
+router.get("/", PostControllers.getAllPosts);
 
 export const PostRoutes = router;

@@ -52,12 +52,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthServices = void 0;
 var http_status_1 = __importDefault(require("http-status"));
-var user_model_1 = require("../user/user.model");
-var auth_utils_1 = require("./auth.utils");
-var config_1 = __importDefault(require("../../config"));
 var AppError_1 = __importDefault(require("../../errors/AppError"));
+var user_model_1 = require("../user/user.model");
+var config_1 = __importDefault(require("../../config"));
+var auth_util_1 = require("./auth.util");
 var loginUser = function (payload) { return __awaiter(void 0, void 0, void 0, function () {
-    var user, jwtPayload, token, password, isDeleted, userWithoutPassword;
+    var user, jwtPayload, token, password, userWithoutPassword;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, user_model_1.User.isUserExistByEmail(payload.email)];
@@ -66,21 +66,19 @@ var loginUser = function (payload) { return __awaiter(void 0, void 0, void 0, fu
                 if (!user) {
                     throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "User not found");
                 }
-                if (user.isDeleted) {
-                    throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "User is deleted");
-                }
                 return [4 /*yield*/, user_model_1.User.isPasswordMatched(payload.password, user.password)];
             case 2:
                 // password match check
                 if (!(_a.sent())) {
-                    throw new AppError_1.default(http_status_1.default.FORBIDDEN, "Passwords do not match");
+                    throw new AppError_1.default(http_status_1.default.FORBIDDEN, "Credentials do not match");
                 }
                 jwtPayload = {
+                    id: user._id,
                     email: user.email,
                     role: user.role
                 };
-                token = (0, auth_utils_1.createToken)(jwtPayload, config_1.default.jwt_secret, config_1.default.jwt_expires_in);
-                password = user.password, isDeleted = user.isDeleted, userWithoutPassword = __rest(user, ["password", "isDeleted"]);
+                token = (0, auth_util_1.createToken)(jwtPayload, config_1.default.jwt_secret, config_1.default.jwt_expires_in);
+                password = user.password, userWithoutPassword = __rest(user, ["password"]);
                 return [2 /*return*/, {
                         token: token,
                         user: userWithoutPassword
