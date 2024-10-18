@@ -95,8 +95,26 @@ var getPostByID = (0, catchAsync_1.default)(function (req, res) { return __await
         }
     });
 }); });
+var updatePost = (0, catchAsync_1.default)(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var result;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, post_service_1.PostServices.updatePostIntoDB(req.params.postId, req.user.id, req.body)];
+            case 1:
+                result = _a.sent();
+                (0, sendResponse_1.default)(res, {
+                    statusCode: http_status_1.default.OK,
+                    success: true,
+                    message: "Post successfully updated",
+                    data: result
+                });
+                return [2 /*return*/];
+        }
+    });
+}); });
 exports.PostControllers = {
     createPost: createPost,
     getAllPosts: getAllPosts,
-    getPostByID: getPostByID
+    getPostByID: getPostByID,
+    updatePost: updatePost
 };

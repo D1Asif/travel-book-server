@@ -36,8 +36,24 @@ const getPostByID = catchAsync(async (req, res) => {
     })
 })
 
+const updatePost = catchAsync(async (req, res) => {
+    const result = await PostServices.updatePostIntoDB(
+        req.params.postId,
+        req.user.id,
+        req.body
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Post successfully updated",
+        data: result
+    });
+})
+
 export const PostControllers = {
     createPost,
     getAllPosts,
-    getPostByID
+    getPostByID,
+    updatePost
 }

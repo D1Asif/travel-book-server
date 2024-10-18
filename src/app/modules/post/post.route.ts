@@ -12,4 +12,6 @@ router.get("/", PostControllers.getAllPosts);
 
 router.get("/:postId", PostControllers.getPostByID);
 
+router.put("/:postId", auth('user', 'admin'), validateRequest(PostValidations.updatePostValidationSchema), PostControllers.updatePost);
+
 export const PostRoutes = router;

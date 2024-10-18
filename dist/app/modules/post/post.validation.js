@@ -10,6 +10,15 @@ var createPostValidationSchema = zod_1.z.object({
         isPremium: zod_1.z.boolean()
     })
 });
+var updatePostValidationSchema = zod_1.z.object({
+    body: zod_1.z.object({
+        content: zod_1.z.string().min(1, { message: "Content is required" }).optional(),
+        images: zod_1.z.array(zod_1.z.string().url()).optional(),
+        tags: zod_1.z.array(zod_1.z.string()).optional(),
+        isPremium: zod_1.z.boolean().optional()
+    })
+});
 exports.PostValidations = {
-    createPostValidationSchema: createPostValidationSchema
+    createPostValidationSchema: createPostValidationSchema,
+    updatePostValidationSchema: updatePostValidationSchema
 };

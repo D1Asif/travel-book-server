@@ -82,11 +82,32 @@ const getPostByIdFromDB = async (postId: string) => {
             }
         });
 
-        return post;
+    return post;
+}
+
+const updatePostIntoDB = async (postId: string, userId: string, payload: Partial<TPost>) => {
+    const post = await Post.findById(postId);
+
+    if (!post) {
+        throw new AppError(httpStatus.NOT_IMPLEMENTED, "Post not found!")
+    }
+
+    if (post.author.toString() !== userId.toString()) {
+        throw new AppError(httpStatus.NOT_FOUND, "Only the post author can update the post.")
+    }
+
+    const updatedPost = await Post.findByIdAndUpdate(
+        postId,
+        payload,
+        { new: true }
+    );
+
+    return updatedPost;
 }
 
 export const PostServices = {
     createPostIntoDB,
     getAllPostsFromDB,
-    getPostByIdFromDB
+    getPostByIdFromDB,
+    updatePostIntoDB
 }

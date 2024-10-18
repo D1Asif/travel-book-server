@@ -150,8 +150,29 @@ var getPostByIdFromDB = function (postId) { return __awaiter(void 0, void 0, voi
         }
     });
 }); };
+var updatePostIntoDB = function (postId, userId, payload) { return __awaiter(void 0, void 0, void 0, function () {
+    var post, updatedPost;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, post_model_1.Post.findById(postId)];
+            case 1:
+                post = _a.sent();
+                if (!post) {
+                    throw new AppError_1.default(http_status_1.default.NOT_IMPLEMENTED, "Post not found!");
+                }
+                if (post.author.toString() !== userId.toString()) {
+                    throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Only the post author can update the post.");
+                }
+                return [4 /*yield*/, post_model_1.Post.findByIdAndUpdate(postId, payload, { new: true })];
+            case 2:
+                updatedPost = _a.sent();
+                return [2 /*return*/, updatedPost];
+        }
+    });
+}); };
 exports.PostServices = {
     createPostIntoDB: createPostIntoDB,
     getAllPostsFromDB: getAllPostsFromDB,
-    getPostByIdFromDB: getPostByIdFromDB
+    getPostByIdFromDB: getPostByIdFromDB,
+    updatePostIntoDB: updatePostIntoDB
 };
