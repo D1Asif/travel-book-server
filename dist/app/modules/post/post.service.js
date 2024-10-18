@@ -57,6 +57,7 @@ var user_model_1 = require("../user/user.model");
 var AppError_1 = __importDefault(require("../../errors/AppError"));
 var http_status_1 = __importDefault(require("http-status"));
 var QueryBuilder_1 = __importDefault(require("../../builder/QueryBuilder"));
+var comment_model_1 = require("../comment/comment.model");
 var createPostIntoDB = function (payload, author) { return __awaiter(void 0, void 0, void 0, function () {
     var session, postData, newPost, updatedUser, err_1;
     return __generator(this, function (_a) {
@@ -170,9 +171,56 @@ var updatePostIntoDB = function (postId, userId, payload) { return __awaiter(voi
         }
     });
 }); };
+var deletePostFromDB = function (postId, userId) { return __awaiter(void 0, void 0, void 0, function () {
+    var post, session, deletedComments, deletedPost, err_2;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, post_model_1.Post.findById(postId)];
+            case 1:
+                post = _a.sent();
+                if (!post) {
+                    throw new AppError_1.default(http_status_1.default.NOT_IMPLEMENTED, "Post not found!");
+                }
+                if (post.author.toString() !== userId.toString()) {
+                    throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Only the post author can delete the post.");
+                }
+                return [4 /*yield*/, mongoose_1.default.startSession()];
+            case 2:
+                session = _a.sent();
+                _a.label = 3;
+            case 3:
+                _a.trys.push([3, 8, , 11]);
+                session.startTransaction();
+                return [4 /*yield*/, comment_model_1.Comment.deleteMany({ postId: postId })];
+            case 4:
+                deletedComments = _a.sent();
+                return [4 /*yield*/, post_model_1.Post.findByIdAndDelete(postId)];
+            case 5:
+                deletedPost = _a.sent();
+                return [4 /*yield*/, session.commitTransaction()];
+            case 6:
+                _a.sent();
+                return [4 /*yield*/, session.endSession()];
+            case 7:
+                _a.sent();
+                return [3 /*break*/, 11];
+            case 8:
+                err_2 = _a.sent();
+                return [4 /*yield*/, session.abortTransaction()];
+            case 9:
+                _a.sent();
+                return [4 /*yield*/, session.endSession()];
+            case 10:
+                _a.sent();
+                throw err_2;
+            case 11: return [2 /*return*/];
+        }
+    });
+}); };
 exports.PostServices = {
     createPostIntoDB: createPostIntoDB,
     getAllPostsFromDB: getAllPostsFromDB,
     getPostByIdFromDB: getPostByIdFromDB,
-    updatePostIntoDB: updatePostIntoDB
+    updatePostIntoDB: updatePostIntoDB,
+    deletePostFromDB: deletePostFromDB
 };

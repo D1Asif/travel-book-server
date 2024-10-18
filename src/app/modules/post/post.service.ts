@@ -5,6 +5,7 @@ import { User } from "../user/user.model";
 import AppError from "../../errors/AppError";
 import httpStatus from "http-status";
 import QueryBuilder from "../../builder/QueryBuilder";
+import { Comment } from "../comment/comment.model";
 
 const createPostIntoDB = async (payload: TPost, author: string) => {
     const session = await mongoose.startSession();
@@ -105,9 +106,39 @@ const updatePostIntoDB = async (postId: string, userId: string, payload: Partial
     return updatedPost;
 }
 
+const deletePostFromDB = async (postId: string, userId: string) => {
+    const post = await Post.findById(postId);
+
+    if (!post) {
+        throw new AppError(httpStatus.NOT_IMPLEMENTED, "Post not found!")
+    }
+
+    if (post.author.toString() !== userId.toString()) {
+        throw new AppError(httpStatus.NOT_FOUND, "Only the post author can delete the post.")
+    }
+
+    const session = await mongoose.startSession();
+
+    try {
+        session.startTransaction();
+
+        const deletedComments = await Comment.deleteMany({ postId })
+
+        const deletedPost = await Post.findByIdAndDelete(postId);
+
+        await session.commitTransaction();
+        await session.endSession();
+    } catch (err) {
+        await session.abortTransaction();
+        await session.endSession();
+        throw err;
+    }
+}
+
 export const PostServices = {
     createPostIntoDB,
     getAllPostsFromDB,
     getPostByIdFromDB,
-    updatePostIntoDB
+    updatePostIntoDB,
+    deletePostFromDB
 }

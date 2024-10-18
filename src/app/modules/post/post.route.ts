@@ -14,4 +14,6 @@ router.get("/:postId", PostControllers.getPostByID);
 
 router.put("/:postId", auth('user', 'admin'), validateRequest(PostValidations.updatePostValidationSchema), PostControllers.updatePost);
 
+router.delete("/:postId", auth('user', 'admin'), PostControllers.deletePost)
+
 export const PostRoutes = router;
