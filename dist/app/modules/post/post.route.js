@@ -15,4 +15,6 @@ router.get("/", post_controller_1.PostControllers.getAllPosts);
 router.get("/:postId", post_controller_1.PostControllers.getPostByID);
 router.put("/:postId", (0, auth_1.default)('user', 'admin'), (0, validateRequest_1.default)(post_validation_1.PostValidations.updatePostValidationSchema), post_controller_1.PostControllers.updatePost);
 router.delete("/:postId", (0, auth_1.default)('user', 'admin'), post_controller_1.PostControllers.deletePost);
+router.put("/:postId/upvote", (0, auth_1.default)('user', 'admin'), post_controller_1.PostControllers.upvotePost);
+router.put("/:postId/downvote", (0, auth_1.default)('user', 'admin'), post_controller_1.PostControllers.downvotePost);
 exports.PostRoutes = router;

@@ -217,10 +217,70 @@ var deletePostFromDB = function (postId, userId) { return __awaiter(void 0, void
         }
     });
 }); };
+var upvotePostIntoDB = function (postId, userId) { return __awaiter(void 0, void 0, void 0, function () {
+    var post, message;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, post_model_1.Post.findById(postId)];
+            case 1:
+                post = _a.sent();
+                if (!post) {
+                    throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Post not found!");
+                }
+                if (post.upVotes.includes(userId)) {
+                    post.upVotes = post.upVotes.filter(function (id) { return !id.equals(userId); });
+                    message = "Upvote successfully removed";
+                }
+                else {
+                    post.upVotes.push(userId);
+                    post.downVotes = post.downVotes.filter(function (id) { return !id.equals(userId); });
+                    message = "Post upvote successful";
+                }
+                return [4 /*yield*/, post.save()];
+            case 2:
+                _a.sent();
+                return [2 /*return*/, {
+                        message: message,
+                        updatedPost: post
+                    }];
+        }
+    });
+}); };
+var downvotePostIntoDB = function (postId, userId) { return __awaiter(void 0, void 0, void 0, function () {
+    var post, message;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, post_model_1.Post.findById(postId)];
+            case 1:
+                post = _a.sent();
+                if (!post) {
+                    throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Post not found!");
+                }
+                if (post.downVotes.includes(userId)) {
+                    post.downVotes = post.downVotes.filter(function (id) { return !id.equals(userId); });
+                    message = "Downvote successfully removed";
+                }
+                else {
+                    post.downVotes.push(userId);
+                    post.upVotes = post.upVotes.filter(function (id) { return !id.equals(userId); });
+                    message = "Post downvote successful";
+                }
+                return [4 /*yield*/, post.save()];
+            case 2:
+                _a.sent();
+                return [2 /*return*/, {
+                        message: message,
+                        updatedPost: post
+                    }];
+        }
+    });
+}); };
 exports.PostServices = {
     createPostIntoDB: createPostIntoDB,
     getAllPostsFromDB: getAllPostsFromDB,
     getPostByIdFromDB: getPostByIdFromDB,
     updatePostIntoDB: updatePostIntoDB,
-    deletePostFromDB: deletePostFromDB
+    deletePostFromDB: deletePostFromDB,
+    upvotePostIntoDB: upvotePostIntoDB,
+    downvotePostIntoDB: downvotePostIntoDB
 };

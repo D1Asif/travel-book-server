@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { TPost } from "./post.interface";
 import { Post } from "./post.model";
 import { User } from "../user/user.model";
@@ -135,10 +135,62 @@ const deletePostFromDB = async (postId: string, userId: string) => {
     }
 }
 
+const upvotePostIntoDB = async (postId: string, userId: Types.ObjectId) => {
+    const post = await Post.findById(postId);
+    let message;
+
+    if (!post) {
+        throw new AppError(httpStatus.NOT_FOUND, "Post not found!")
+    }
+
+    if (post.upVotes.includes(userId)) {
+        post.upVotes = post.upVotes.filter((id) => !id.equals(userId));
+        message = "Upvote successfully removed"
+    } else {
+        post.upVotes.push(userId)
+        post.downVotes = post.downVotes.filter((id) => !id.equals(userId));
+        message = "Post upvote successful"
+    }
+
+    await post.save();
+
+    return {
+        message,
+        updatedPost: post
+    }
+}
+
+const downvotePostIntoDB = async (postId: string, userId: Types.ObjectId) => {
+    const post = await Post.findById(postId);
+    let message;
+
+    if (!post) {
+        throw new AppError(httpStatus.NOT_FOUND, "Post not found!")
+    }
+
+    if (post.downVotes.includes(userId)) {
+        post.downVotes = post.downVotes.filter((id) => !id.equals(userId));
+        message = "Downvote successfully removed"
+    } else {
+        post.downVotes.push(userId)
+        post.upVotes = post.upVotes.filter((id) => !id.equals(userId));
+        message = "Post downvote successful"
+    }
+
+    await post.save();
+
+    return {
+        message,
+        updatedPost: post
+    }
+}
+
 export const PostServices = {
     createPostIntoDB,
     getAllPostsFromDB,
     getPostByIdFromDB,
     updatePostIntoDB,
-    deletePostFromDB
+    deletePostFromDB,
+    upvotePostIntoDB,
+    downvotePostIntoDB
 }

@@ -14,6 +14,10 @@ router.get("/:postId", PostControllers.getPostByID);
 
 router.put("/:postId", auth('user', 'admin'), validateRequest(PostValidations.updatePostValidationSchema), PostControllers.updatePost);
 
-router.delete("/:postId", auth('user', 'admin'), PostControllers.deletePost)
+router.delete("/:postId", auth('user', 'admin'), PostControllers.deletePost);
+
+router.put("/:postId/upvote", auth('user', 'admin'), PostControllers.upvotePost);
+
+router.put("/:postId/downvote", auth('user', 'admin'), PostControllers.downvotePost);
 
 export const PostRoutes = router;
