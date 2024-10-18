@@ -10,4 +10,6 @@ router.post("/", auth('user', 'admin'), validateRequest(PostValidations.createPo
 
 router.get("/", PostControllers.getAllPosts);
 
+router.get("/:postId", PostControllers.getPostByID);
+
 export const PostRoutes = router;

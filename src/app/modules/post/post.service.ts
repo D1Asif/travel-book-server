@@ -51,23 +51,42 @@ const getAllPostsFromDB = async (query: Record<string, unknown>) => {
         .sort()
 
     const posts = await postsQuery.modelQuery
-                    .populate({
-                        path: 'author',
-                        select: '_id name username profilePicture isVerifiedUser'
-                    })
-                    .populate({
-                        path: 'comments',
-                        select: '_id author content',
-                        populate: {
-                            path: 'author',
-                            select: '_id name username profilePicture isVerifiedUser'
-                        }
-                    });
+        .populate({
+            path: 'author',
+            select: '_id name username profilePicture isVerifiedUser'
+        })
+        .populate({
+            path: 'comments',
+            select: '_id author content',
+            populate: {
+                path: 'author',
+                select: '_id name username profilePicture isVerifiedUser'
+            }
+        });
 
     return posts;
 }
 
+const getPostByIdFromDB = async (postId: string) => {
+    const post = await Post.findById(postId)
+        .populate({
+            path: 'author',
+            select: '_id name username profilePicture isVerifiedUser'
+        })
+        .populate({
+            path: 'comments',
+            select: '_id author content',
+            populate: {
+                path: 'author',
+                select: '_id name username profilePicture isVerifiedUser'
+            }
+        });
+
+        return post;
+}
+
 export const PostServices = {
     createPostIntoDB,
-    getAllPostsFromDB
+    getAllPostsFromDB,
+    getPostByIdFromDB
 }

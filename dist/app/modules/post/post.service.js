@@ -127,7 +127,31 @@ var getAllPostsFromDB = function (query) { return __awaiter(void 0, void 0, void
         }
     });
 }); };
+var getPostByIdFromDB = function (postId) { return __awaiter(void 0, void 0, void 0, function () {
+    var post;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, post_model_1.Post.findById(postId)
+                    .populate({
+                    path: 'author',
+                    select: '_id name username profilePicture isVerifiedUser'
+                })
+                    .populate({
+                    path: 'comments',
+                    select: '_id author content',
+                    populate: {
+                        path: 'author',
+                        select: '_id name username profilePicture isVerifiedUser'
+                    }
+                })];
+            case 1:
+                post = _a.sent();
+                return [2 /*return*/, post];
+        }
+    });
+}); };
 exports.PostServices = {
     createPostIntoDB: createPostIntoDB,
-    getAllPostsFromDB: getAllPostsFromDB
+    getAllPostsFromDB: getAllPostsFromDB,
+    getPostByIdFromDB: getPostByIdFromDB
 };

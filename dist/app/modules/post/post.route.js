@@ -12,4 +12,5 @@ var post_controller_1 = require("./post.controller");
 var router = express_1.default.Router();
 router.post("/", (0, auth_1.default)('user', 'admin'), (0, validateRequest_1.default)(post_validation_1.PostValidations.createPostValidationSchema), post_controller_1.PostControllers.createPost);
 router.get("/", post_controller_1.PostControllers.getAllPosts);
+router.get("/:postId", post_controller_1.PostControllers.getPostByID);
 exports.PostRoutes = router;
