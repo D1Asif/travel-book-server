@@ -2,11 +2,13 @@ import mongoose from "mongoose";
 import { TPost } from "./post.interface";
 import { Post } from "./post.model";
 import { User } from "../user/user.model";
+import AppError from "../../errors/AppError";
+import httpStatus from "http-status";
 
 const createPostIntoDB = async (payload: TPost, author: string) => {
     const session = await mongoose.startSession();
 
-    const payloadData = {
+    const postData = {
         ...payload,
         author
     }
@@ -14,24 +16,28 @@ const createPostIntoDB = async (payload: TPost, author: string) => {
     try {
         session.startTransaction();
 
-        const newPost = await Post.create([payloadData], { session });
+        const newPost = await Post.create([postData], { session });
 
         const updatedUser = await User.findByIdAndUpdate(
             author,
             {
                 $push: { posts: newPost[0]._id }
             },
-            { session }
+            { session, new: true }
         )
 
+        if (!updatedUser) {
+            throw new AppError(httpStatus.NOT_FOUND, "User not found!")
+        }
+
         await session.commitTransaction();
+        await session.endSession();
 
         return newPost;
     } catch (err) {
         await session.abortTransaction();
-        throw err;
-    } finally {
         await session.endSession();
+        throw err;
     }
 }
 

@@ -27,10 +27,6 @@ const auth = (...requiredRoles: TUserRole[]) => {
             throw new AppError(httpStatus.NOT_FOUND, "Authentication failure: user not found");
         }
 
-        if (user.isDeleted) {
-            throw new AppError(httpStatus.FORBIDDEN, "Authentication failure: user is deleted");
-        }
-
         if (requiredRoles.length && !requiredRoles.includes(user.role)) {
             throw new AppError(httpStatus.UNAUTHORIZED, "You have no access to this route!")
         }

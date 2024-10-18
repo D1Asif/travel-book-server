@@ -14,6 +14,8 @@ export interface TUser extends Document {
     followers: Types.ObjectId[]
 }
 
+export type TUserRole = TUser['role'];
+
 export interface UserModel extends Model<TUser> {
     isUserExistByEmail(email: string): Promise<TUser>,
     isPasswordMatched(plainTextPassword: string, hashedPassword: string): Promise<boolean>
