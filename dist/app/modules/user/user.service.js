@@ -68,7 +68,19 @@ var getAllUsersFromDB = function (query) { return __awaiter(void 0, void 0, void
         }
     });
 }); };
+var getUserByIdFromDB = function (userId) { return __awaiter(void 0, void 0, void 0, function () {
+    var user;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, user_model_1.User.findById(userId)];
+            case 1:
+                user = _a.sent();
+                return [2 /*return*/, user];
+        }
+    });
+}); };
 exports.UserServices = {
     createUserIntoDB: createUserIntoDB,
-    getAllUsersFromDB: getAllUsersFromDB
+    getAllUsersFromDB: getAllUsersFromDB,
+    getUserByIdFromDB: getUserByIdFromDB
 };
