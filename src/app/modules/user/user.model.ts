@@ -24,7 +24,8 @@ const userSchema = new Schema<TUser, UserModel>({
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        select: 0
     },
     profilePicture: {
         type: String,

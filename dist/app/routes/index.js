@@ -8,6 +8,7 @@ var auth_route_1 = require("../modules/auth/auth.route");
 var post_route_1 = require("../modules/post/post.route");
 var comment_route_1 = require("../modules/comment/comment.route");
 var payment_route_1 = require("../modules/payment/payment.route");
+var user_router_1 = require("../modules/user/user.router");
 var router = express_1.default.Router();
 var moduleRoutes = [
     {
@@ -25,6 +26,10 @@ var moduleRoutes = [
     {
         path: "/payments",
         route: payment_route_1.PaymentRoutes
+    },
+    {
+        path: "/users",
+        route: user_router_1.UserRoutes
     },
 ];
 moduleRoutes.forEach(function (route) { return router.use(route.path, route.route); });

@@ -83,7 +83,8 @@ var userSchema = new mongoose_1.Schema({
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        select: 0
     },
     profilePicture: {
         type: String,

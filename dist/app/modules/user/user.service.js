@@ -35,8 +35,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserServices = void 0;
+var QueryBuilder_1 = __importDefault(require("../../builder/QueryBuilder"));
 var user_model_1 = require("./user.model");
 var createUserIntoDB = function (payload) { return __awaiter(void 0, void 0, void 0, function () {
     var newUser;
@@ -49,6 +53,22 @@ var createUserIntoDB = function (payload) { return __awaiter(void 0, void 0, voi
         }
     });
 }); };
+var getAllUsersFromDB = function (query) { return __awaiter(void 0, void 0, void 0, function () {
+    var usersQuery, users;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                usersQuery = new QueryBuilder_1.default(user_model_1.User.find(), query).search(['name', 'username', 'email'])
+                    .filter()
+                    .sort();
+                return [4 /*yield*/, usersQuery.modelQuery];
+            case 1:
+                users = _a.sent();
+                return [2 /*return*/, users];
+        }
+    });
+}); };
 exports.UserServices = {
-    createUserIntoDB: createUserIntoDB
+    createUserIntoDB: createUserIntoDB,
+    getAllUsersFromDB: getAllUsersFromDB
 };
