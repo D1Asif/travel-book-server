@@ -12,7 +12,7 @@ router.get("/:userId", UserControllers.getUserById);
 
 router.put("/:userId", auth('user', 'admin'), validateRequest(UserValidations.updateUserValidationSchema), UserControllers.updateUser);
 
-// delete user: Delete user's posts, comments of that posts & user's comments before deleting user.
+router.delete("/:userId", auth('user', 'admin'), UserControllers.deleteUser);
 
 // follow a user
 

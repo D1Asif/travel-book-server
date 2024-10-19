@@ -35,6 +35,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -44,6 +53,9 @@ var http_status_1 = __importDefault(require("http-status"));
 var QueryBuilder_1 = __importDefault(require("../../builder/QueryBuilder"));
 var AppError_1 = __importDefault(require("../../errors/AppError"));
 var user_model_1 = require("./user.model");
+var mongoose_1 = __importDefault(require("mongoose"));
+var post_model_1 = require("../post/post.model");
+var comment_model_1 = require("../comment/comment.model");
 var createUserIntoDB = function (payload) { return __awaiter(void 0, void 0, void 0, function () {
     var newUser;
     return __generator(this, function (_a) {
@@ -101,9 +113,71 @@ var updateUserIntoDB = function (userId, loggedInUserId, payload) { return __awa
         }
     });
 }); };
+var deleteUserFromDB = function (userId, loggedInUserId) { return __awaiter(void 0, void 0, void 0, function () {
+    var user, session, postIds, err_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, user_model_1.User.findById(userId)];
+            case 1:
+                user = _a.sent();
+                if (!user) {
+                    throw new AppError_1.default(http_status_1.default.NOT_FOUND, "User not found!");
+                }
+                if (userId.toString() !== loggedInUserId.toString()) {
+                    throw new AppError_1.default(http_status_1.default.UNAUTHORIZED, "You are not authorized!");
+                }
+                return [4 /*yield*/, mongoose_1.default.startSession()];
+            case 2:
+                session = _a.sent();
+                _a.label = 3;
+            case 3:
+                _a.trys.push([3, 10, , 13]);
+                session.startTransaction();
+                postIds = __spreadArray([], user.posts, true);
+                return [4 /*yield*/, post_model_1.Post.deleteMany({ author: userId }, { session: session })
+                    // delete comments of the posts
+                ];
+            case 4:
+                _a.sent();
+                // delete comments of the posts
+                return [4 /*yield*/, Promise.all(postIds.map(function (postId) { return comment_model_1.Comment.deleteMany({ postId: postId }, { session: session }); }))];
+            case 5:
+                // delete comments of the posts
+                _a.sent();
+                // delete user's comment
+                return [4 /*yield*/, comment_model_1.Comment.deleteMany({ author: userId }, { session: session })];
+            case 6:
+                // delete user's comment
+                _a.sent();
+                // delete user
+                return [4 /*yield*/, user_model_1.User.findByIdAndDelete(userId)];
+            case 7:
+                // delete user
+                _a.sent();
+                return [4 /*yield*/, session.commitTransaction()];
+            case 8:
+                _a.sent();
+                return [4 /*yield*/, session.endSession()];
+            case 9:
+                _a.sent();
+                return [3 /*break*/, 13];
+            case 10:
+                err_1 = _a.sent();
+                return [4 /*yield*/, session.abortTransaction()];
+            case 11:
+                _a.sent();
+                return [4 /*yield*/, session.endSession()];
+            case 12:
+                _a.sent();
+                return [3 /*break*/, 13];
+            case 13: return [2 /*return*/];
+        }
+    });
+}); };
 exports.UserServices = {
     createUserIntoDB: createUserIntoDB,
     getAllUsersFromDB: getAllUsersFromDB,
     getUserByIdFromDB: getUserByIdFromDB,
-    updateUserIntoDB: updateUserIntoDB
+    updateUserIntoDB: updateUserIntoDB,
+    deleteUserFromDB: deleteUserFromDB
 };

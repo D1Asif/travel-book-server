@@ -126,6 +126,13 @@ const deletePostFromDB = async (postId: string, userId: string) => {
 
         const deletedPost = await Post.findByIdAndDelete(postId);
 
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            {
+                $pull: { posts: postId }
+            }
+        )
+
         await session.commitTransaction();
         await session.endSession();
     } catch (err) {

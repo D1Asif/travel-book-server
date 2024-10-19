@@ -172,7 +172,7 @@ var updatePostIntoDB = function (postId, userId, payload) { return __awaiter(voi
     });
 }); };
 var deletePostFromDB = function (postId, userId) { return __awaiter(void 0, void 0, void 0, function () {
-    var post, session, deletedComments, deletedPost, err_2;
+    var post, session, deletedComments, deletedPost, updatedUser, err_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, post_model_1.Post.findById(postId)];
@@ -189,7 +189,7 @@ var deletePostFromDB = function (postId, userId) { return __awaiter(void 0, void
                 session = _a.sent();
                 _a.label = 3;
             case 3:
-                _a.trys.push([3, 8, , 11]);
+                _a.trys.push([3, 9, , 12]);
                 session.startTransaction();
                 return [4 /*yield*/, comment_model_1.Comment.deleteMany({ postId: postId })];
             case 4:
@@ -197,23 +197,28 @@ var deletePostFromDB = function (postId, userId) { return __awaiter(void 0, void
                 return [4 /*yield*/, post_model_1.Post.findByIdAndDelete(postId)];
             case 5:
                 deletedPost = _a.sent();
-                return [4 /*yield*/, session.commitTransaction()];
+                return [4 /*yield*/, user_model_1.User.findByIdAndUpdate(userId, {
+                        $pull: { posts: postId }
+                    })];
             case 6:
-                _a.sent();
-                return [4 /*yield*/, session.endSession()];
+                updatedUser = _a.sent();
+                return [4 /*yield*/, session.commitTransaction()];
             case 7:
                 _a.sent();
-                return [3 /*break*/, 11];
+                return [4 /*yield*/, session.endSession()];
             case 8:
+                _a.sent();
+                return [3 /*break*/, 12];
+            case 9:
                 err_2 = _a.sent();
                 return [4 /*yield*/, session.abortTransaction()];
-            case 9:
-                _a.sent();
-                return [4 /*yield*/, session.endSession()];
             case 10:
                 _a.sent();
+                return [4 /*yield*/, session.endSession()];
+            case 11:
+                _a.sent();
                 throw err_2;
-            case 11: return [2 /*return*/];
+            case 12: return [2 /*return*/];
         }
     });
 }); };

@@ -47,9 +47,21 @@ const updateUser = catchAsync(async (req, res) => {
     })
 });
 
+const deleteUser = catchAsync(async (req, res) => {
+    const result = await UserServices.deleteUserFromDB(req.params.userId, req.user.id);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "User successfully deleted",
+        data: result
+    })
+});
+
 export const UserControllers = {
     createUser,
     getAllUsers,
     getUserById,
-    updateUser
+    updateUser,
+    deleteUser
 }
