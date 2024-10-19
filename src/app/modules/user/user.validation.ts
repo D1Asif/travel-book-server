@@ -12,6 +12,16 @@ const createUserValidationSchema = z.object({
     })
 });
 
+const updateUserValidationSchema = z.object({
+    body: z.object({
+        name: z.string().min(1, "Name is required").optional(),
+        username: z.string().min(1, "Username is required").optional(),
+        phone: z.string().min(10, "Phone number must be at least 10 digits").optional(),
+        profilePicture: z.string().optional(),
+    })
+});
+
 export const UserValidations = {
-    createUserValidationSchema
+    createUserValidationSchema,
+    updateUserValidationSchema
 }

@@ -40,7 +40,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserServices = void 0;
+var http_status_1 = __importDefault(require("http-status"));
 var QueryBuilder_1 = __importDefault(require("../../builder/QueryBuilder"));
+var AppError_1 = __importDefault(require("../../errors/AppError"));
 var user_model_1 = require("./user.model");
 var createUserIntoDB = function (payload) { return __awaiter(void 0, void 0, void 0, function () {
     var newUser;
@@ -79,8 +81,29 @@ var getUserByIdFromDB = function (userId) { return __awaiter(void 0, void 0, voi
         }
     });
 }); };
+var updateUserIntoDB = function (userId, loggedInUserId, payload) { return __awaiter(void 0, void 0, void 0, function () {
+    var user, updatedUser;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, user_model_1.User.findById(userId)];
+            case 1:
+                user = _a.sent();
+                if (!user) {
+                    throw new AppError_1.default(http_status_1.default.NOT_FOUND, "User not found!");
+                }
+                if (userId.toString() !== loggedInUserId.toString()) {
+                    throw new AppError_1.default(http_status_1.default.UNAUTHORIZED, "Only user can update own data");
+                }
+                return [4 /*yield*/, user_model_1.User.findByIdAndUpdate(userId, payload, { new: true })];
+            case 2:
+                updatedUser = _a.sent();
+                return [2 /*return*/, updatedUser];
+        }
+    });
+}); };
 exports.UserServices = {
     createUserIntoDB: createUserIntoDB,
     getAllUsersFromDB: getAllUsersFromDB,
-    getUserByIdFromDB: getUserByIdFromDB
+    getUserByIdFromDB: getUserByIdFromDB,
+    updateUserIntoDB: updateUserIntoDB
 };

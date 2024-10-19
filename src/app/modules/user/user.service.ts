@@ -1,4 +1,6 @@
+import httpStatus from "http-status";
 import QueryBuilder from "../../builder/QueryBuilder";
+import AppError from "../../errors/AppError";
 import { TUser } from "./user.interface"
 import { User } from "./user.model"
 
@@ -27,8 +29,29 @@ const getUserByIdFromDB = async (userId: string) => {
     return user;
 }
 
+const updateUserIntoDB = async (userId: string, loggedInUserId: string, payload: Partial<TUser>) => {
+    const user = await User.findById(userId);
+
+    if (!user) {
+        throw new AppError(httpStatus.NOT_FOUND, "User not found!")
+    }
+
+    if (userId.toString() !== loggedInUserId.toString()) {
+        throw new AppError(httpStatus.UNAUTHORIZED, "Only user can update own data")
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        payload,
+        { new: true }
+    );
+
+    return updatedUser;
+}
+
 export const UserServices = {
     createUserIntoDB,
     getAllUsersFromDB,
-    getUserByIdFromDB
+    getUserByIdFromDB,
+    updateUserIntoDB
 }
