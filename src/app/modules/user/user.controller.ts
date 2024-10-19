@@ -80,6 +80,17 @@ const unfollowUser = catchAsync(async (req, res) => {
     })
 });
 
+const makeUserAdmin = catchAsync(async (req, res) => {
+    const result = await UserServices.makeUserAdminIntoDB(req.params.userId);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "User successfully made admin",
+        data: result
+    })
+});
+
 export const UserControllers = {
     createUser,
     getAllUsers,
@@ -87,5 +98,6 @@ export const UserControllers = {
     updateUser,
     deleteUser,
     followUser,
-    unfollowUser
+    unfollowUser,
+    makeUserAdmin
 }

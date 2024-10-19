@@ -16,9 +16,9 @@ router.delete("/:userId", auth('user', 'admin'), UserControllers.deleteUser);
 
 router.put("/:userId/follow", auth('user', 'admin'), UserControllers.followUser);
 
-// unfollow a user
 router.put("/:userId/unfollow", auth('user', 'admin'), UserControllers.unfollowUser);
 
 // make user admin
+router.put("/:userId/make-admin", auth("admin"), UserControllers.makeUserAdmin)
 
 export const UserRoutes = router;

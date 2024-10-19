@@ -163,6 +163,23 @@ var unfollowUser = (0, catchAsync_1.default)(function (req, res) { return __awai
         }
     });
 }); });
+var makeUserAdmin = (0, catchAsync_1.default)(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var result;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, user_service_1.UserServices.makeUserAdminIntoDB(req.params.userId)];
+            case 1:
+                result = _a.sent();
+                (0, sendResponse_1.default)(res, {
+                    statusCode: http_status_1.default.OK,
+                    success: true,
+                    message: "User successfully made admin",
+                    data: result
+                });
+                return [2 /*return*/];
+        }
+    });
+}); });
 exports.UserControllers = {
     createUser: createUser,
     getAllUsers: getAllUsers,
@@ -170,5 +187,6 @@ exports.UserControllers = {
     updateUser: updateUser,
     deleteUser: deleteUser,
     followUser: followUser,
-    unfollowUser: unfollowUser
+    unfollowUser: unfollowUser,
+    makeUserAdmin: makeUserAdmin
 };

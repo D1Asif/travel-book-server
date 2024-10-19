@@ -158,6 +158,16 @@ const unfollowUser = async (userId: string, loggedInUserId: string) => {
     }
 }
 
+const makeUserAdminIntoDB = async (userId: string) => {
+    const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        { role: "admin" },
+        { new: true }
+    )
+
+    return updatedUser;
+}
+
 export const UserServices = {
     createUserIntoDB,
     getAllUsersFromDB,
@@ -165,5 +175,6 @@ export const UserServices = {
     updateUserIntoDB,
     deleteUserFromDB,
     followUser,
-    unfollowUser
+    unfollowUser,
+    makeUserAdminIntoDB
 }
