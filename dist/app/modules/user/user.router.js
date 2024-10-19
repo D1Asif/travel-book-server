@@ -15,6 +15,7 @@ router.get("/:userId", user_controller_1.UserControllers.getUserById);
 router.put("/:userId", (0, auth_1.default)('user', 'admin'), (0, validateRequest_1.default)(user_validation_1.UserValidations.updateUserValidationSchema), user_controller_1.UserControllers.updateUser);
 router.delete("/:userId", (0, auth_1.default)('user', 'admin'), user_controller_1.UserControllers.deleteUser);
 // follow a user
+router.put("/:userId/follow", (0, auth_1.default)('user', 'admin'), user_controller_1.UserControllers.followUser);
 // unfollow a user
 // make user admin
 exports.UserRoutes = router;

@@ -174,10 +174,43 @@ var deleteUserFromDB = function (userId, loggedInUserId) { return __awaiter(void
         }
     });
 }); };
+var followUser = function (userId, loggedInUserId) { return __awaiter(void 0, void 0, void 0, function () {
+    var session, updatedFollowingUser, updatedFollowedUser, err_2;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, mongoose_1.default.startSession()];
+            case 1:
+                session = _a.sent();
+                _a.label = 2;
+            case 2:
+                _a.trys.push([2, 5, , 6]);
+                session.startTransaction();
+                return [4 /*yield*/, user_model_1.User.findByIdAndUpdate(loggedInUserId, {
+                        $addToSet: { following: userId }
+                    }, { new: true })];
+            case 3:
+                updatedFollowingUser = _a.sent();
+                return [4 /*yield*/, user_model_1.User.findByIdAndUpdate(userId, {
+                        $addToSet: { followers: loggedInUserId }
+                    }, { new: true })];
+            case 4:
+                updatedFollowedUser = _a.sent();
+                session.endSession();
+                return [2 /*return*/, updatedFollowingUser];
+            case 5:
+                err_2 = _a.sent();
+                session.abortTransaction();
+                session.endSession();
+                return [3 /*break*/, 6];
+            case 6: return [2 /*return*/];
+        }
+    });
+}); };
 exports.UserServices = {
     createUserIntoDB: createUserIntoDB,
     getAllUsersFromDB: getAllUsersFromDB,
     getUserByIdFromDB: getUserByIdFromDB,
     updateUserIntoDB: updateUserIntoDB,
-    deleteUserFromDB: deleteUserFromDB
+    deleteUserFromDB: deleteUserFromDB,
+    followUser: followUser
 };

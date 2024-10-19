@@ -92,10 +92,42 @@ const deleteUserFromDB = async (userId: string, loggedInUserId: string) => {
     }
 }
 
+const followUser = async (userId: string, loggedInUserId: string) => {
+    const session = await mongoose.startSession();
+
+    try {
+        session.startTransaction();
+
+        const updatedFollowingUser = await User.findByIdAndUpdate(
+            loggedInUserId,
+            {
+                $addToSet: { following: userId }
+            },
+            { new: true }
+        );
+
+        const updatedFollowedUser = await User.findByIdAndUpdate(
+            userId,
+            {
+                $addToSet: { followers: loggedInUserId }
+            },
+            { new: true }
+        )
+
+        session.endSession();
+
+        return updatedFollowingUser;
+    } catch (err) {
+        session.abortTransaction();
+        session.endSession();
+    }
+}
+
 export const UserServices = {
     createUserIntoDB,
     getAllUsersFromDB,
     getUserByIdFromDB,
     updateUserIntoDB,
-    deleteUserFromDB
+    deleteUserFromDB,
+    followUser
 }
