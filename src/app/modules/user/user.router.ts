@@ -14,10 +14,10 @@ router.put("/:userId", auth('user', 'admin'), validateRequest(UserValidations.up
 
 router.delete("/:userId", auth('user', 'admin'), UserControllers.deleteUser);
 
-// follow a user
 router.put("/:userId/follow", auth('user', 'admin'), UserControllers.followUser);
 
 // unfollow a user
+router.put("/:userId/unfollow", auth('user', 'admin'), UserControllers.unfollowUser);
 
 // make user admin
 

@@ -69,11 +69,23 @@ const followUser = catchAsync(async (req, res) => {
     })
 });
 
+const unfollowUser = catchAsync(async (req, res) => {
+    const result = await UserServices.unfollowUser(req.params.userId, req.user.id);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "User successfully unfollowed",
+        data: result
+    })
+});
+
 export const UserControllers = {
     createUser,
     getAllUsers,
     getUserById,
     updateUser,
     deleteUser,
-    followUser
+    followUser,
+    unfollowUser
 }
