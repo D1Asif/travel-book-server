@@ -86,7 +86,11 @@ var getUserByIdFromDB = function (userId) { return __awaiter(void 0, void 0, voi
     var user;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, user_model_1.User.findById(userId)];
+            case 0: return [4 /*yield*/, user_model_1.User.findById(userId)
+                    .populate({
+                    path: 'posts',
+                    populate: 'comments'
+                })];
             case 1:
                 user = _a.sent();
                 return [2 /*return*/, user];

@@ -18,7 +18,6 @@ router.put("/:userId/follow", auth('user', 'admin'), UserControllers.followUser)
 
 router.put("/:userId/unfollow", auth('user', 'admin'), UserControllers.unfollowUser);
 
-// make user admin
 router.put("/:userId/make-admin", auth("admin"), UserControllers.makeUserAdmin)
 
 export const UserRoutes = router;

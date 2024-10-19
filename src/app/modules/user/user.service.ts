@@ -27,7 +27,11 @@ const getAllUsersFromDB = async (query: Record<string, unknown>) => {
 }
 
 const getUserByIdFromDB = async (userId: string) => {
-    const user = await User.findById(userId);
+    const user = await User.findById(userId)
+                    .populate({
+                        path: 'posts',
+                        populate: 'comments'
+                    });
 
     return user;
 }
