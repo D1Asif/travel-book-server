@@ -33,6 +33,10 @@ const getUserByIdFromDB = async (userId: string) => {
                         populate: 'comments'
                     });
 
+    if (!user) {
+        throw new AppError(httpStatus.NOT_FOUND, "user does not exist!")
+    }
+
     return user;
 }
 
