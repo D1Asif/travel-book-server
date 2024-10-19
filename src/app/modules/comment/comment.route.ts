@@ -8,4 +8,6 @@ const router = express.Router();
 
 router.post("/", auth('user', 'admin'), validateRequest(CommentValidations.createCommentValidationSchema), CommentControllers.createComment);
 
+router.put("/:commentId", auth('user', 'admin'), validateRequest(CommentValidations.updateCommentValidationSchema), CommentControllers.updateComment);
+
 export const CommentRoutes = router;

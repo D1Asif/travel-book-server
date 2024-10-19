@@ -100,6 +100,27 @@ var createCommentIntoDB = function (payload, author) { return __awaiter(void 0, 
         }
     });
 }); };
+var updateCommentIntoDB = function (payload, commentId, userId) { return __awaiter(void 0, void 0, void 0, function () {
+    var comment, updatedComment;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, comment_model_1.Comment.findById(commentId)];
+            case 1:
+                comment = _a.sent();
+                if (!comment) {
+                    throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Comment not found");
+                }
+                if (comment.author.toString() !== userId.toString()) {
+                    throw new AppError_1.default(http_status_1.default.UNAUTHORIZED, "Only the comment author can update comment");
+                }
+                return [4 /*yield*/, comment_model_1.Comment.findByIdAndUpdate(commentId, payload, { new: true })];
+            case 2:
+                updatedComment = _a.sent();
+                return [2 /*return*/, updatedComment];
+        }
+    });
+}); };
 exports.CommentServices = {
-    createCommentIntoDB: createCommentIntoDB
+    createCommentIntoDB: createCommentIntoDB,
+    updateCommentIntoDB: updateCommentIntoDB
 };

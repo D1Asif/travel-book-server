@@ -8,6 +8,12 @@ var createCommentValidationSchema = zod_1.z.object({
         content: zod_1.z.string().min(1, "Content cannot be empty")
     })
 });
+var updateCommentValidationSchema = zod_1.z.object({
+    body: zod_1.z.object({
+        content: zod_1.z.string().min(1, "Content cannot be empty")
+    })
+});
 exports.CommentValidations = {
-    createCommentValidationSchema: createCommentValidationSchema
+    createCommentValidationSchema: createCommentValidationSchema,
+    updateCommentValidationSchema: updateCommentValidationSchema
 };

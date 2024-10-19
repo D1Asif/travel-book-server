@@ -42,6 +42,27 @@ const createCommentIntoDB = async (payload: TComment, author: string) => {
     }
 }
 
+const updateCommentIntoDB = async (payload: Partial<TComment>, commentId: string, userId: string) => {
+    const comment = await Comment.findById(commentId);
+
+    if (!comment) {
+        throw new AppError(httpStatus.NOT_FOUND, "Comment not found");
+    }
+
+    if (comment.author.toString() !== userId.toString()) {
+        throw new AppError(httpStatus.UNAUTHORIZED, "Only the comment author can update comment");
+    }
+
+    const updatedComment = await Comment.findByIdAndUpdate(
+        commentId,
+        payload,
+        { new: true }
+    );
+
+    return updatedComment;
+}
+
 export const CommentServices = {
-    createCommentIntoDB
+    createCommentIntoDB,
+    updateCommentIntoDB
 }

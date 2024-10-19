@@ -90,11 +90,11 @@ const updatePostIntoDB = async (postId: string, userId: string, payload: Partial
     const post = await Post.findById(postId);
 
     if (!post) {
-        throw new AppError(httpStatus.NOT_IMPLEMENTED, "Post not found!")
+        throw new AppError(httpStatus.NOT_FOUND, "Post not found!")
     }
 
     if (post.author.toString() !== userId.toString()) {
-        throw new AppError(httpStatus.NOT_FOUND, "Only the post author can update the post.")
+        throw new AppError(httpStatus.UNAUTHORIZED, "Only the post author can update the post.")
     }
 
     const updatedPost = await Post.findByIdAndUpdate(

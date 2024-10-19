@@ -159,10 +159,10 @@ var updatePostIntoDB = function (postId, userId, payload) { return __awaiter(voi
             case 1:
                 post = _a.sent();
                 if (!post) {
-                    throw new AppError_1.default(http_status_1.default.NOT_IMPLEMENTED, "Post not found!");
+                    throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Post not found!");
                 }
                 if (post.author.toString() !== userId.toString()) {
-                    throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Only the post author can update the post.");
+                    throw new AppError_1.default(http_status_1.default.UNAUTHORIZED, "Only the post author can update the post.");
                 }
                 return [4 /*yield*/, post_model_1.Post.findByIdAndUpdate(postId, payload, { new: true })];
             case 2:
