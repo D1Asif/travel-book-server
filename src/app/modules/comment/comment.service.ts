@@ -62,7 +62,42 @@ const updateCommentIntoDB = async (payload: Partial<TComment>, commentId: string
     return updatedComment;
 }
 
+const deleteCommentFromDB = async (commentId: string, userId: string) => {
+    const comment = await Comment.findById(commentId);
+
+    if (!comment) {
+        throw new AppError(httpStatus.NOT_FOUND, "Comment not found");
+    }
+
+    if (comment.author.toString() !== userId.toString()) {
+        throw new AppError(httpStatus.UNAUTHORIZED, "Only the comment author can delete comment");
+    }
+
+    const session = await mongoose.startSession();
+
+    try {
+        session.startTransaction();
+
+        await Post.findByIdAndUpdate(
+            comment.postId,
+            {
+                $pull: { comments: comment._id }
+            }
+        )
+
+        await Comment.findByIdAndDelete(commentId, { session });
+
+        await session.commitTransaction();
+        await session.endSession();
+    } catch (err) {
+        await session.abortTransaction();
+        await session.endSession();
+        throw err;
+    }
+}
+
 export const CommentServices = {
     createCommentIntoDB,
-    updateCommentIntoDB
+    updateCommentIntoDB,
+    deleteCommentFromDB
 }

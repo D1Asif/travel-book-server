@@ -10,4 +10,6 @@ router.post("/", auth('user', 'admin'), validateRequest(CommentValidations.creat
 
 router.put("/:commentId", auth('user', 'admin'), validateRequest(CommentValidations.updateCommentValidationSchema), CommentControllers.updateComment);
 
+router.delete("/:commentId", auth('user', 'admin'), CommentControllers.deleteComment)
+
 export const CommentRoutes = router;

@@ -120,7 +120,56 @@ var updateCommentIntoDB = function (payload, commentId, userId) { return __await
         }
     });
 }); };
+var deleteCommentFromDB = function (commentId, userId) { return __awaiter(void 0, void 0, void 0, function () {
+    var comment, session, err_2;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, comment_model_1.Comment.findById(commentId)];
+            case 1:
+                comment = _a.sent();
+                if (!comment) {
+                    throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Comment not found");
+                }
+                if (comment.author.toString() !== userId.toString()) {
+                    throw new AppError_1.default(http_status_1.default.UNAUTHORIZED, "Only the comment author can delete comment");
+                }
+                return [4 /*yield*/, mongoose_1.default.startSession()];
+            case 2:
+                session = _a.sent();
+                _a.label = 3;
+            case 3:
+                _a.trys.push([3, 8, , 11]);
+                session.startTransaction();
+                return [4 /*yield*/, post_model_1.Post.findByIdAndUpdate(comment.postId, {
+                        $pull: { comments: comment._id }
+                    })];
+            case 4:
+                _a.sent();
+                return [4 /*yield*/, comment_model_1.Comment.findByIdAndDelete(commentId, { session: session })];
+            case 5:
+                _a.sent();
+                return [4 /*yield*/, session.commitTransaction()];
+            case 6:
+                _a.sent();
+                return [4 /*yield*/, session.endSession()];
+            case 7:
+                _a.sent();
+                return [3 /*break*/, 11];
+            case 8:
+                err_2 = _a.sent();
+                return [4 /*yield*/, session.abortTransaction()];
+            case 9:
+                _a.sent();
+                return [4 /*yield*/, session.endSession()];
+            case 10:
+                _a.sent();
+                throw err_2;
+            case 11: return [2 /*return*/];
+        }
+    });
+}); };
 exports.CommentServices = {
     createCommentIntoDB: createCommentIntoDB,
-    updateCommentIntoDB: updateCommentIntoDB
+    updateCommentIntoDB: updateCommentIntoDB,
+    deleteCommentFromDB: deleteCommentFromDB
 };
