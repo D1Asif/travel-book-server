@@ -93,6 +93,9 @@ var getUserByIdFromDB = function (userId) { return __awaiter(void 0, void 0, voi
                 })];
             case 1:
                 user = _a.sent();
+                if (!user) {
+                    throw new AppError_1.default(http_status_1.default.NOT_FOUND, "user does not exist!");
+                }
                 return [2 /*return*/, user];
         }
     });

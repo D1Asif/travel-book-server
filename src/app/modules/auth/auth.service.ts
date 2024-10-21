@@ -25,7 +25,7 @@ const loginUser = async (payload: TLoginUser) => {
 
     const token = createToken(jwtPayload, config.jwt_secret as string, config.jwt_expires_in as string);
 
-    const { password, ...userWithoutPassword } = user;
+    const { password, ...userWithoutPassword } = user.toObject();
 
     return {
         token,

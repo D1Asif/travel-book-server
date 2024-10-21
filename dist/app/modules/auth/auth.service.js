@@ -57,19 +57,19 @@ var user_model_1 = require("../user/user.model");
 var config_1 = __importDefault(require("../../config"));
 var auth_util_1 = require("./auth.util");
 var loginUser = function (payload) { return __awaiter(void 0, void 0, void 0, function () {
-    var user, jwtPayload, token, password, userWithoutPassword;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var user, jwtPayload, token, _a, password, userWithoutPassword;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0: return [4 /*yield*/, user_model_1.User.isUserExistByEmail(payload.email)];
             case 1:
-                user = _a.sent();
+                user = _b.sent();
                 if (!user) {
                     throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "User not found");
                 }
                 return [4 /*yield*/, user_model_1.User.isPasswordMatched(payload.password, user.password)];
             case 2:
                 // password match check
-                if (!(_a.sent())) {
+                if (!(_b.sent())) {
                     throw new AppError_1.default(http_status_1.default.FORBIDDEN, "Credentials do not match");
                 }
                 jwtPayload = {
@@ -78,7 +78,7 @@ var loginUser = function (payload) { return __awaiter(void 0, void 0, void 0, fu
                     role: user.role
                 };
                 token = (0, auth_util_1.createToken)(jwtPayload, config_1.default.jwt_secret, config_1.default.jwt_expires_in);
-                password = user.password, userWithoutPassword = __rest(user, ["password"]);
+                _a = user.toObject(), password = _a.password, userWithoutPassword = __rest(_a, ["password"]);
                 return [2 /*return*/, {
                         token: token,
                         user: userWithoutPassword
