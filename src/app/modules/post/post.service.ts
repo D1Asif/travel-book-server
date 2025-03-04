@@ -81,7 +81,7 @@ const getPostByIdFromDB = async (postId: string) => {
                 path: 'author',
                 select: '_id name username profilePicture isVerifiedUser'
             }
-        });
+        }).lean();
 
     return post;
 }
