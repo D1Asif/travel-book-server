@@ -76,12 +76,12 @@ const getPostByIdFromDB = async (postId: string) => {
         })
         .populate({
             path: 'comments',
-            select: '_id author content createdAt updatedAt',
+            // select: '_id author content +createdAt +updatedAt',
             populate: {
                 path: 'author',
                 select: '_id name username profilePicture isVerifiedUser'
             }
-        }).lean();
+        });
 
     return post;
 }
