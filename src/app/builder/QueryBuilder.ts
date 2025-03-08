@@ -11,7 +11,7 @@ class QueryBuilder<T> {
 
     search(searchableFields: string[]) {
         const searchTerm = this?.query?.searchTerm;
-        
+
         if (searchTerm) {
             this.modelQuery = this.modelQuery.find({
                 $or: searchableFields.map((field) => (
@@ -31,12 +31,17 @@ class QueryBuilder<T> {
     filter() {
         // creating a query object so that direct value filters can be done with that. The fields that needs to be handled separately needs to be deleted from the query object and handle separately e.g. tags.
         const queryObj = { ...this.query }
-        
+
         if (queryObj?.sort) {
             delete queryObj.sort;
         }
         if (queryObj?.searchTerm) {
             delete queryObj.searchTerm;
+        }
+
+        // Remove the custom filter parameter so it doesn't override our initial condition
+        if (queryObj?.filter) {
+            delete queryObj.filter;
         }
 
         const tags = (this.query?.tags as string)?.split(",");
