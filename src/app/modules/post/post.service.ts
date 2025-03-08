@@ -44,13 +44,10 @@ const createPostIntoDB = async (payload: TPost, author: string) => {
 }
 
 const getAllPostsFromDB = async (query: Record<string, unknown>, userId: string) => {
-    const user = await User.findById(userId).select('following'); // Select only the 'following' field
-    const followingUserIds = user?.following || []; // Ensure it's always an array
-
-    const isFollowingFilter = query?.filter?.toString() === "following";
+    const user = await User.findById(userId);
 
     const postsQuery = new QueryBuilder(
-        Post.find(isFollowingFilter && followingUserIds.length > 0 ? { author: { $in: followingUserIds } } : {}),
+        Post.find(query?.filter === "following" && user ? {author: {$in: user?.following}} : {}),
         query
     ).search(['content'])
         .filter()

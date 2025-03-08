@@ -44,6 +44,10 @@ var QueryBuilder = /** @class */ (function () {
         if (queryObj === null || queryObj === void 0 ? void 0 : queryObj.searchTerm) {
             delete queryObj.searchTerm;
         }
+        // Remove the custom filter parameter so it doesn't override our initial condition
+        if (queryObj === null || queryObj === void 0 ? void 0 : queryObj.filter) {
+            delete queryObj.filter;
+        }
         var tags = (_b = (_a = this.query) === null || _a === void 0 ? void 0 : _a.tags) === null || _b === void 0 ? void 0 : _b.split(",");
         if (tags === null || tags === void 0 ? void 0 : tags.length) {
             delete queryObj.tags;

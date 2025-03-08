@@ -101,12 +101,14 @@ var createPostIntoDB = function (payload, author) { return __awaiter(void 0, voi
         }
     });
 }); };
-var getAllPostsFromDB = function (query) { return __awaiter(void 0, void 0, void 0, function () {
-    var postsQuery, posts;
+var getAllPostsFromDB = function (query, userId) { return __awaiter(void 0, void 0, void 0, function () {
+    var user, postsQuery, posts;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0:
-                postsQuery = new QueryBuilder_1.default(post_model_1.Post.find(), query).search(['content'])
+            case 0: return [4 /*yield*/, user_model_1.User.findById(userId)];
+            case 1:
+                user = _a.sent();
+                postsQuery = new QueryBuilder_1.default(post_model_1.Post.find((query === null || query === void 0 ? void 0 : query.filter) === "following" && user ? { author: { $in: user === null || user === void 0 ? void 0 : user.following } } : {}), query).search(['content'])
                     .filter()
                     .sort();
                 return [4 /*yield*/, postsQuery.modelQuery
@@ -122,7 +124,7 @@ var getAllPostsFromDB = function (query) { return __awaiter(void 0, void 0, void
                             select: '_id name username profilePicture isVerifiedUser'
                         }
                     })];
-            case 1:
+            case 2:
                 posts = _a.sent();
                 return [2 /*return*/, posts];
         }
@@ -139,7 +141,7 @@ var getPostByIdFromDB = function (postId) { return __awaiter(void 0, void 0, voi
                 })
                     .populate({
                     path: 'comments',
-                    select: '_id author content',
+                    select: '_id author content createdAt updatedAt',
                     populate: {
                         path: 'author',
                         select: '_id name username profilePicture isVerifiedUser'
