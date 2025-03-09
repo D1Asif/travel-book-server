@@ -45,7 +45,7 @@ var config_1 = __importDefault(require("../config"));
 var user_model_1 = require("../modules/user/user.model");
 var optionalAuth = function () {
     return (0, catchAsync_1.default)(function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-        var authHeader, token, decoded, email, user;
+        var authHeader, token, decoded, email, user, error_1;
         var _a;
         return __generator(this, function (_b) {
             switch (_b.label) {
@@ -56,15 +56,24 @@ var optionalAuth = function () {
                         return [2 /*return*/, next()];
                     }
                     token = authHeader.split(" ")[1];
+                    _b.label = 1;
+                case 1:
+                    _b.trys.push([1, 3, , 4]);
                     decoded = jsonwebtoken_1.default.verify(token, config_1.default.jwt_secret);
                     email = decoded.email;
                     return [4 /*yield*/, user_model_1.User.isUserExistByEmail(email)];
-                case 1:
+                case 2:
                     user = _b.sent();
                     if (!user) {
                         return [2 /*return*/, next()]; // Proceed as an unauthenticated request
                     }
                     req.user = decoded;
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_1 = _b.sent();
+                    // If JWT verification fails, proceed as an unauthenticated request
+                    return [2 /*return*/, next()];
+                case 4:
                     next();
                     return [2 /*return*/];
             }

@@ -14,16 +14,21 @@ const optionalAuth = () => {
 
         const token = authHeader.split(" ")[1];
 
-        const decoded = jwt.verify(token, config.jwt_secret as string) as JwtPayload;
-        const { email } = decoded;
+        try {
+            const decoded = jwt.verify(token, config.jwt_secret as string) as JwtPayload;
+            const { email } = decoded;
 
-        // Check if the user exists
-        const user = await User.isUserExistByEmail(email);
-        if (!user) {
-            return next(); // Proceed as an unauthenticated request
+            // Check if the user exists
+            const user = await User.isUserExistByEmail(email);
+            if (!user) {
+                return next(); // Proceed as an unauthenticated request
+            }
+
+            req.user = decoded;
+        } catch (error) {
+            // If JWT verification fails, proceed as an unauthenticated request
+            return next();
         }
-
-        req.user = decoded as JwtPayload;
 
         next();
     });
